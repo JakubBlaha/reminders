@@ -7,19 +7,23 @@
 	import Datepicker from '$lib/components/Datepicker/Datepicker.svelte';
 	import type { ReminderData } from '$lib/interfaces/ReminderData';
 	import { userId } from '$lib/utils/auth';
+	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { deleteReminder } from '$lib/utils/reminders/deleteReminder';
 	import { getReminder } from '$lib/utils/reminders/getReminder';
 	import { updateReminder } from '$lib/utils/reminders/updateReminder';
 
 	const reminderId = $page.params.id;
 
+	loadingRoute.set(true);
+
 	let reminderData: ReminderData = {} as ReminderData;
 
 	const getReminderDataPromise = $userId && getReminder(reminderId);
 
-	getReminderDataPromise.then((data) => {
+	getReminderDataPromise.then(async (data) => {
 		reminderData = data;
 		datepicker.setTimestamp(reminderData.timestamp);
+		loadingRoute.set(false);
 	});
 
 	let datepicker: Datepicker;
