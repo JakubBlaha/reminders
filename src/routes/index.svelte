@@ -3,6 +3,7 @@
 	import Button from '$lib/components/Button/Button.svelte';
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import ReminderCard from '$lib/components/ReminderCard/ReminderCard.svelte';
+	import Logout from '$lib/icons/logout.svelte';
 	import { userId } from '$lib/utils/auth';
 	import { dateGroupReminders } from '$lib/utils/misc/dateGroupReminders';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
@@ -22,6 +23,10 @@
 
 	function clickAdd() {
 		goto('/new');
+	}
+
+	function clickLogout() {
+		goto('/logout');
 	}
 </script>
 
@@ -48,7 +53,24 @@
 
 	<div class="flex-grow" />
 
-	<Button on:click={clickAdd}>
-		<span class="text-2xl">+</span>
-	</Button>
+	<div class="flex space-x-2">
+		<button
+			on:click={clickLogout}
+			class="w-16 h-16 grid place-items-center bg-neutral-800 rounded rotate-180 active:scale-95"
+		>
+			<div class="translate-x-1">
+				<Logout />
+			</div>
+		</button>
+
+		<Button on:click={clickAdd} cls="flex-grow">
+			<span class="text-2xl">+</span>
+		</Button>
+
+		<a
+			class="w-16 bg-red-500 animate-pulse rounded px-2"
+			href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+			target="_blank">z</a
+		>
+	</div>
 </main>
