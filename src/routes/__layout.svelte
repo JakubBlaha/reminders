@@ -54,7 +54,7 @@
 
 		<!-- Titlebar -->
 		<div class="text-4xl pt-4 pl-5 whitespace-nowrap float-right min-w-full">
-			{#if $page.url.pathname !== '/'}
+			{#if $page.url.pathname !== '/' && $page.url.pathname !== '/login'}
 				<div on:click={clickBack} class="inline">
 					<button class="transition active:-translate-x-12">
 						<ChevronLeft />
