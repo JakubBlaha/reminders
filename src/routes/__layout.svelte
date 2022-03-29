@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { browser } from '$app/env';
 	import { afterNavigate, goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import LoaderScreen from '$lib/components/LoaderScreen/LoaderScreen.svelte';
+	import ChevronLeft from '$lib/icons/ChevronLeft.svelte';
 	import { authState } from '$lib/utils/auth';
 	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import '../app.css';
 
 	let innerHeight: number;
@@ -28,6 +30,10 @@
 			sayRemind = false;
 		}
 	});
+
+	function clickBack() {
+		goto('/');
+	}
 </script>
 
 <svelte:window bind:innerHeight />
@@ -48,6 +54,14 @@
 
 		<!-- Titlebar -->
 		<div class="text-4xl pt-4 pl-5 whitespace-nowrap float-right min-w-full">
+			{#if $page.url.pathname !== '/'}
+				<div on:click={clickBack} class="inline">
+					<button class="transition active:-translate-x-12">
+						<ChevronLeft />
+					</button>
+				</div>
+			{/if}
+
 			Remind<span class:opacity-0={sayRemind}>
 				r<span class="text-white bg-red-500 px-2">z</span>
 			</span>
