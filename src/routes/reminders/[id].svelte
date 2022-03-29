@@ -18,13 +18,13 @@
 
 	let reminderData: ReminderData = {} as ReminderData;
 
-	const getReminderDataPromise = $userId && getReminder(reminderId);
-
-	getReminderDataPromise.then(async (data) => {
-		reminderData = data;
-		datepicker.setTimestamp(reminderData.timestamp);
-		loadingRoute.set(false);
-	});
+	$: if ($userId) {
+		getReminder(reminderId).then(async (data) => {
+			reminderData = data;
+			datepicker.setTimestamp(reminderData.timestamp);
+			loadingRoute.set(false);
+		});
+	}
 
 	let datepicker: Datepicker;
 	let updateButton: Button;
