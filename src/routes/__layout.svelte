@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-	import { afterNavigate, goto } from '$app/navigation';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import LoaderScreen from '$lib/components/LoaderScreen/LoaderScreen.svelte';
 	import { authState } from '$lib/utils/auth';
 	import { loadingRoute } from '$lib/utils/misc/loader';
+	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
+	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
 	import '../app.css';
 
@@ -12,18 +14,43 @@
 	$: if (browser) {
 		$authState === 'logged_out' && goto('/login');
 	}
+
+	beforeNavigate(({ to }) => {
+		if (to.pathname !== '/') {
+			sayRemindersFor.set(null);
+		}
+	});
 </script>
 
 <svelte:window bind:innerHeight />
 
-<div class="bg-neutral-900 text-white" style="height: {innerHeight}px">
-	{#if $authState === null || !browser || $loadingRoute}
-		<div class="h-full absolute top-0 bottom-0 left-0 right-0 bg-neutral-800 z-10" out:fade>
-			<LoaderScreen />
-		</div>
-	{/if}
+<div style="height: {innerHeight}px" class="grid place-items-center max-w-full">
+	<div class="absolute left-2 top-2 text-white">
+		Remindr<span class="text-white bg-red-500 px-1">z</span>
+	</div>
 
-	<div class="h-full" in:fade>
-		<slot />
+	<div
+		class="bg-neutral-900 text-white max-w-[500px] max-h-[800px] mx-auto w-full h-full overflow-hidden z-10"
+	>
+		{#if $authState === null || !browser || $loadingRoute}
+			<div class="h-full absolute top-0 bottom-0 left-0 right-0 bg-neutral-800 z-10" out:fade>
+				<LoaderScreen />
+			</div>
+		{/if}
+
+		<!-- Titlebar -->
+		<div class="text-4xl pt-4 pl-5 whitespace-nowrap float-right min-w-full">
+			Remindr<span class="text-white bg-red-500 px-2">z</span>
+
+			{#if $sayRemindersFor}
+				<span transition:typewriter={{ message: `for ${$sayRemindersFor}:` }} />
+			{/if}
+		</div>
+
+		<div class="clear-right" />
+
+		<div class="h-[calc(100%-4rem)]" in:fade>
+			<slot />
+		</div>
 	</div>
 </div>

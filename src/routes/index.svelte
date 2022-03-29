@@ -6,12 +6,20 @@
 	import ReminderCard from '$lib/components/ReminderCard/ReminderCard.svelte';
 	import { userId } from '$lib/utils/auth';
 	import { dateGroupReminders } from '$lib/utils/misc/dateGroupReminders';
+	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
 	import { getReminders } from '$lib/utils/reminders/getReminders';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
 
 	$: getReminderGroupsPromise =
-		$userId && getReminders().then((reminders) => dateGroupReminders(reminders));
+		$userId &&
+		getReminders().then((reminders) => {
+			const groups = dateGroupReminders(reminders);
+
+			sayRemindersFor.set(groups[0].title);
+
+			return groups;
+		});
 
 	function clickAdd() {
 		goto('/new');
@@ -20,9 +28,11 @@
 
 <main class="p-4 h-full flex flex-col">
 	{#await getReminderGroupsPromise then groups}
-		{#each groups || [] as group}
-			<div in:fade class="mt-8">
-				<CategoryTitle title={group.title} />
+		{#each groups || [] as group, index}
+			<div in:fade class="mt-8 first:-mt-2">
+				{#if index !== 0}
+					<CategoryTitle title={group.title} />
+				{/if}
 
 				{#each group.reminders as reminder}
 					<ReminderCard reminderData={reminder} />
