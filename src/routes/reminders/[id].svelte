@@ -66,7 +66,7 @@
 	}
 </script>
 
-<main class="p-4 flex flex-col h-full">
+<main class="p-4 flex flex-col h-full overflow-scroll">
 	<CategoryTitle title="me about:" />
 
 	<input
@@ -84,7 +84,7 @@
 
 	<div class="flex space-x-2">
 		<Button
-			cls="w-full !bg-neutral-800 text-red-500"
+			cls="w-full !bg-neutral-800 !text-red-500"
 			on:click={clickDelete}
 			loading={deletingReminder}
 			disabled={updatingReminder}

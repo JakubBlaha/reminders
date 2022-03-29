@@ -10,6 +10,7 @@
 	import { onMount } from 'svelte';
 	import Toggle from '$lib/components/Toggle/Toggle.svelte';
 	import Button from '$lib/components/Button/Button.svelte';
+	import { slide } from 'svelte/transition';
 
 	dayjs.extend(isoWeek);
 
@@ -83,7 +84,7 @@
 
 		const currentMonthDays = Array(selectedDate.daysInMonth())
 			.fill(0)
-			.map((_, i) => ({ day: i + 1 }));
+			.map((_, i) => ({ day: i + 1, isCurrentMonth: true }));
 
 		const fillAfterDays = Array(42 - fillBeforeDays.length - currentMonthDays.length)
 			.fill(0)
@@ -94,7 +95,10 @@
 </script>
 
 <div class="relative">
-	<div class="flex items-center space-x-2 bg-neutral-800 px-4 rounded">
+	<div
+		class="flex items-center space-x-2 bg-neutral-800 px-4 rounded"
+		on:pointerdown={() => (open = !open)}
+	>
 		<div class="inline-block">
 			<Calendar />
 		</div>
@@ -102,90 +106,93 @@
 		<input
 			{id}
 			type="text"
-			class="w-full p-4 bg-transparent"
+			class="w-full p-4 bg-transparent cursor-pointer"
 			disabled
 			{placeholder}
 			bind:value={inputText}
 		/>
 
 		<button
-			class="bg-color-black text-white w-12 absolute top-0 right-0 h-full rounded-r-md bg-neutral-700"
-			on:click={() => (open = !open)}
+			class="bg-color-black text-white w-16 absolute top-0 right-0 h-full rounded-r-md pointer-events-none"
 		>
 			<div class:rotate-180={open} class="grid place-items-center transition">
 				<ChevronDown />
 			</div>
 		</button>
 	</div>
+</div>
 
-	{#if open}
+{#if open}
+	<div
+		class="my-2 w-full bg-neutral-800 flex flex-col rounded p-4 h-[450px]"
+		transition:slide|local
+	>
 		<div
-			class="absolute top-0 right-0 w-full bg-neutral-800 flex flex-col rounded translate-y-16 p-4 z-10 h-[450px]"
+			class="border-color-black border border-neutral-700 rounded-xl h-12 grid grid-cols-2 overflow-hidden flex-shrink-0 w-56 mx-auto"
 		>
-			<div
-				class="border-color-black border border-neutral-700 rounded-xl h-12 grid grid-cols-2 overflow-hidden flex-shrink-0"
-			>
-				<button
-					class="uppercase font-semibold flex items-center justify-center
+			<button
+				class="uppercase font-semibold flex items-center justify-center
                     {section === 'date' ? 'bg-neutral-600 text-white' : ''}"
-					on:click={() => (section = 'date')}
-				>
-					<Calendar />
-					<span class="ml-2">Date</span>
-				</button>
+				on:click={() => (section = 'date')}
+			>
+				<Calendar />
+				<span class="ml-2">Date</span>
+			</button>
 
-				<button
-					class="uppercase font-semibold flex items-center justify-center
+			<button
+				class="uppercase font-semibold flex items-center justify-center
                     {section === 'time' ? 'bg-neutral-600 text-white' : ''}"
-					on:click={() => (section = 'time')}
-				>
-					<Time />
-					<span class="ml-2">Time</span>
-				</button>
+				on:click={() => (section = 'time')}
+			>
+				<Time />
+				<span class="ml-2">Time</span>
+			</button>
+		</div>
+
+		{#if section === 'date'}
+			<div class="flex mt-4 w-56 mx-auto">
+				<div class="flex-grow font-bold">
+					{selectedDate.format('MMM')}
+					{selectedDate.year()}
+				</div>
+				<div class="flex space-x-2">
+					<button class="btn" on:click={previousMonth}><ChevronLeft /></button>
+					<button class="btn" on:click={nextMonth}><ChevronRight /></button>
+				</div>
 			</div>
 
-			{#if section === 'date'}
-				<div class="flex mt-4">
-					<div class="flex-grow font-bold">
-						{selectedDate.format('MMM')}
-						{selectedDate.year()}
-					</div>
-					<div class="flex space-x-2">
-						<button class="btn" on:click={previousMonth}><ChevronLeft /></button>
-						<button class="btn" on:click={nextMonth}><ChevronRight /></button>
-					</div>
-				</div>
+			<div class="flex font-semibold mt-6 justify-center">
+				{#each days as day}
+					<div class="w-8 text-center">{day}</div>
+				{/each}
+			</div>
 
-				<div class="flex font-semibold mt-6">
-					{#each days as day}
-						<div class="flex-grow text-center">{day}</div>
-					{/each}
-				</div>
-
-				<div
-					class="grid grid-cols-7 gap-px bg-neutral-700 border-neutral-700 border mt-3 w-max mx-auto"
-				>
-					{#each monthDays as day}
-						<button
-							class="btn flex-grow text-center aspect-1 bg-neutral-800 grid place-items-center text-sm font-medium w-8 h-8
-							{day.day === selectedDate.date() ? 'bg-red-500 text-white' : ''}
+			<div
+				class="grid grid-cols-7 gap-px bg-neutral-700 border-neutral-700 border mt-3 w-max mx-auto"
+			>
+				{#each monthDays as day}
+					<button
+						class="btn flex-grow text-center aspect-1 bg-neutral-800 grid place-items-center text-sm font-medium w-8 h-8
+							{day.day === selectedDate.date() && day.isCurrentMonth ? '!bg-red-500 text-white' : ''}
 							{day.isDisabled ? 'text-[#747474] bg-neutral-700' : ''}"
-							class:font-bold={day.isToday}
-							on:click={() => (selectedDate = selectedDate.date(day.day))}
-							disabled={day.isDisabled}
-						>
-							{day.day}
-						</button>
-					{/each}
-				</div>
+						class:font-bold={day.isToday}
+						on:click={() => (selectedDate = selectedDate.date(day.day))}
+						disabled={day.isDisabled}
+					>
+						{day.day}
+					</button>
+				{/each}
+			</div>
 
-				<div class="flex-grow" />
+			<div class="flex-grow" />
 
-				<Button cls="mt-4" on:click={() => (section = 'time')}>Confirm Date</Button>
-			{/if}
+			<Button cls="mt-4 w-56 mx-auto !h-12" on:click={() => (section = 'time')}>Confirm Date</Button
+			>
+		{/if}
 
-			{#if section === 'time'}
-				<div class="flex justify-center mt-8">
+		{#if section === 'time'}
+			<div class="flex flex-col w-56 mx-auto h-full">
+				<div class="flex justify-center mt-6">
 					<Toggle onInsideLabel="PM" offInsideLabel="AM" bind:state={isPm} />
 				</div>
 
@@ -215,11 +222,11 @@
 
 				<div class="flex-grow" />
 
-				<Button on:click={handleDone}>Confirm Time</Button>
-			{/if}
-		</div>
-	{/if}
-</div>
+				<Button cls="w-full !h-12" on:click={handleDone}>Confirm Time</Button>
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <style>
 	input[type='range'] {

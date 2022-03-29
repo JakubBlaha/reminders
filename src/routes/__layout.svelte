@@ -73,7 +73,7 @@
 
 		<div class="clear-right" />
 
-		<div class="h-[calc(100%-4rem)]" in:fade>
+		<div class="h-[calc(100%-4rem)] overflow-scroll" in:fade>
 			<slot />
 		</div>
 	</div>

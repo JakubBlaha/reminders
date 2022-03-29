@@ -1,5 +1,4 @@
 <script>
-	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button/Button.svelte';
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
