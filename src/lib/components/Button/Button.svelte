@@ -15,7 +15,7 @@
 </script>
 
 <button
-	class="bg-white rounded px-4 {cls} disabled:opacity-50 active:scale-95 transition h-16"
+	class="bg-white rounded px-4 {cls} disabled:opacity-50 active:scale-95 transition h-16 text-neutral-900"
 	class:!bg-green-600={green}
 	disabled={disabled || loading}
 	on:click
@@ -23,7 +23,7 @@
 	{#if loading}
 		<Loader />
 	{:else}
-		<div class="py-2 text-neutral-900" class:!text-white={green}>
+		<div class="py-2" class:!text-white={green}>
 			<slot />
 		</div>
 	{/if}

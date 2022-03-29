@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
 	import { page } from '$app/stores';
 	import Button from '$lib/components/Button/Button.svelte';
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import Datepicker from '$lib/components/Datepicker/Datepicker.svelte';
 	import type { ReminderData } from '$lib/interfaces/ReminderData';
 	import { userId } from '$lib/utils/auth';
+	import { deleteReminder } from '$lib/utils/reminders/deleteReminder';
 	import { getReminder } from '$lib/utils/reminders/getReminder';
 	import { updateReminder } from '$lib/utils/reminders/updateReminder';
 
@@ -24,8 +27,9 @@
 
 	let updatingReminder = false;
 
-	async function clickUpdateReminder() {
+	async function clickUpdate() {
 		updatingReminder = true;
+		deleteClickConfirms = false;
 
 		reminderData.timestamp = datepicker.getTimestamp();
 
@@ -33,6 +37,24 @@
 
 		updateButton.greenify();
 		updatingReminder = false;
+	}
+
+	let deletingReminder = false;
+	let deleteClickConfirms = false;
+
+	async function clickDelete() {
+		if (!deleteClickConfirms) {
+			deleteClickConfirms = true;
+			return;
+		}
+
+		deletingReminder = true;
+
+		await deleteReminder(reminderId);
+
+		deletingReminder = false;
+
+		goto('/');
 	}
 </script>
 
@@ -52,14 +74,24 @@
 
 	<div class="flex-grow" />
 
-	<div>
+	<div class="flex space-x-2">
+		<Button
+			cls="w-full !bg-neutral-800 text-red-500"
+			on:click={clickDelete}
+			loading={deletingReminder}
+			disabled={updatingReminder}
+		>
+			{deleteClickConfirms ? 'Confirm Deletion' : 'Delete'}
+		</Button>
+
 		<Button
 			cls="w-full"
-			on:click={clickUpdateReminder}
+			on:click={clickUpdate}
 			loading={updatingReminder}
 			bind:this={updateButton}
+			disabled={deletingReminder}
 		>
-			Update Reminder
+			Update
 		</Button>
 	</div>
 </main>
