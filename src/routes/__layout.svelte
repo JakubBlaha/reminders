@@ -17,12 +17,14 @@
 
 <svelte:window bind:innerHeight />
 
-<div class="bg-neutral-900" style="height: {innerHeight}px">
+<div class="bg-neutral-900 text-white" style="height: {innerHeight}px">
 	{#if $authState === null || !browser}
 		<div class="text-4xl font-mono p-4" out:fade on:outroend={() => (canDisplayContent = true)}>
 			Loading auth...
 		</div>
-	{:else if canDisplayContent || true}
-		<slot />
+	{:else if canDisplayContent}
+		<div class="h-full" in:fade>
+			<slot />
+		</div>
 	{/if}
 </div>

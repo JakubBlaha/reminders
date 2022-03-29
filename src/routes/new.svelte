@@ -5,6 +5,7 @@
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import Datepicker from '$lib/components/Datepicker/Datepicker.svelte';
 	import TextInput from '$lib/components/TextInput/TextInput.svelte';
+	import { userId } from '$lib/utils/auth';
 	import { createReminder } from '$lib/utils/reminders/createReminder';
 	import type { Dayjs } from 'dayjs';
 
@@ -14,7 +15,7 @@
 	$: disableCreate = !title || !datetime;
 
 	async function clickCreateReminder() {
-		await createReminder({ title, timestamp: datetime.unix() });
+		await createReminder({ title, timestamp: datetime.unix(), creatorId: $userId });
 		goto('/');
 	}
 </script>

@@ -17,6 +17,14 @@
 	export let placeholder = 'Select date & time';
 	export let value = dayjs();
 
+	export function setTimestamp(ts: number) {
+		selectedDate = dayjs.unix(ts);
+	}
+
+	export function getTimestamp() {
+		return selectedDate.unix();
+	}
+
 	let open = false;
 	let section: 'date' | 'time' = 'date';
 
@@ -45,16 +53,15 @@
 			selectedDate = selectedDate.add(12, 'hour');
 		}
 
-		inputText = formatDatetimeFromISO(selectedDate);
 		open = false;
 	}
 
-	onMount(resetToday);
+	// onMount(resetToday);
 
 	let hours = 6;
 	let minutes = 30;
 	let monthDays = [];
-	let inputText = '';
+	$: inputText = formatDatetimeFromISO(selectedDate);
 	let isPm = false;
 
 	$: monthWeekdayOffset = selectedDate.date(1).isoWeekday() - 1;
