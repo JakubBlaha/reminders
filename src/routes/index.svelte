@@ -21,7 +21,7 @@
 <main class="p-4 h-full flex flex-col">
 	{#await getReminderGroupsPromise then groups}
 		{#each groups || [] as group}
-			<div in:fade>
+			<div in:fade class="mt-8">
 				<CategoryTitle title={group.title} />
 
 				{#each group.reminders as reminder}

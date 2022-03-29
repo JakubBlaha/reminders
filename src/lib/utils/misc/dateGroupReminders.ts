@@ -6,7 +6,7 @@ export function dateGroupReminders(reminders: ReminderData[]) {
 	const groups: DateGroupData[] = [];
 
 	for (const reminder of reminders) {
-		const groupTitle = dayjs(reminder.timestamp).format('MMM DD, YYYY');
+		const groupTitle = dayjs.unix(reminder.timestamp).format('MMM DD, YYYY');
 
 		const group = groups.find((group) => group.title === groupTitle);
 
