@@ -19,6 +19,10 @@
 	let reminderData: ReminderData = {} as ReminderData;
 
 	$: if ($userId) {
+		fetchReminderData();
+	}
+
+	async function fetchReminderData() {
 		getReminder(reminderId).then(async (data) => {
 			reminderData = data;
 			datepicker.setTimestamp(reminderData.timestamp);
@@ -63,7 +67,7 @@
 </script>
 
 <main class="p-4 flex flex-col h-full">
-	<CategoryTitle title="Remind me about:" />
+	<CategoryTitle title="me about:" />
 
 	<input
 		class="bg-neutral-800 rounded p-4 mt-2 mb-4 outline-none w-full"

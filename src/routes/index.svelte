@@ -16,7 +16,7 @@
 		getReminders().then((reminders) => {
 			const groups = dateGroupReminders(reminders);
 
-			sayRemindersFor.set(groups[0].title);
+			sayRemindersFor.set(groups[0]?.title || '');
 
 			return groups;
 		});

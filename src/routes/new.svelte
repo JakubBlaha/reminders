@@ -21,7 +21,7 @@
 </script>
 
 <main class="p-4 flex flex-col h-full">
-	<CategoryTitle title="Remind me about:" />
+	<CategoryTitle title="me about:" />
 
 	<div class="mt-4">
 		<TextInput bind:value={title} />

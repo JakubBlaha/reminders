@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/env';
-	import { beforeNavigate, goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import LoaderScreen from '$lib/components/LoaderScreen/LoaderScreen.svelte';
 	import { authState } from '$lib/utils/auth';
 	import { loadingRoute } from '$lib/utils/misc/loader';
@@ -15,9 +15,17 @@
 		$authState === 'logged_out' && goto('/login');
 	}
 
-	beforeNavigate(({ to }) => {
+	let sayRemind = false;
+
+	afterNavigate(({ to }) => {
 		if (to.pathname !== '/') {
 			sayRemindersFor.set(null);
+		}
+
+		if (to.pathname === '/new' || to.pathname.includes('reminders')) {
+			sayRemind = true;
+		} else {
+			sayRemind = false;
 		}
 	});
 </script>
@@ -40,7 +48,9 @@
 
 		<!-- Titlebar -->
 		<div class="text-4xl pt-4 pl-5 whitespace-nowrap float-right min-w-full">
-			Remindr<span class="text-white bg-red-500 px-2">z</span>
+			Remind<span class:opacity-0={sayRemind}>
+				r<span class="text-white bg-red-500 px-2">z</span>
+			</span>
 
 			{#if $sayRemindersFor}
 				<span transition:typewriter={{ message: `for ${$sayRemindersFor}:` }} />
