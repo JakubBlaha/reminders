@@ -4,28 +4,21 @@
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import ReminderCard from '$lib/components/ReminderCard/ReminderCard.svelte';
 	import Logout from '$lib/icons/logout.svelte';
-	import type { ReminderUpdateMessage } from '$lib/interfaces/ReminderUpdateMessage';
-	import { userId } from '$lib/utils/auth';
+	import type { DateGroupData } from '$lib/interfaces/DateGroupData';
 	import { dateGroupReminders } from '$lib/utils/misc/dateGroupReminders';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
-	import { getReminderUpdateChannel } from '$lib/utils/pwa/channel';
 	import { clientReminders } from '$lib/utils/reminders';
-	import { getReminders } from '$lib/utils/reminders/getReminders';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
 
-	$: getReminderGroupsPromise =
-		$userId &&
-		getReminders().then((reminders) => {
-			// Save reminders for the whole client
-			$clientReminders = reminders;
+	let groups: DateGroupData[] = null;
 
-			const groups = dateGroupReminders(reminders);
+	clientReminders.subscribe((reminders) => {
+		if (!reminders) return;
 
-			sayRemindersFor.set(groups[0]?.title || '');
-
-			return groups;
-		});
+		groups = dateGroupReminders(reminders);
+		sayRemindersFor.set(groups[0]?.title || '');
+	});
 
 	function clickAdd() {
 		goto('/new');
@@ -37,8 +30,8 @@
 </script>
 
 <main class="flex flex-col h-full p-4">
-	{#await getReminderGroupsPromise then groups}
-		{#each groups || [] as group, index}
+	{#if groups?.length}
+		{#each groups as group, index}
 			<div in:fade class="mt-8 first:-mt-2">
 				{#if index !== 0}
 					<CategoryTitle title={group.title} />
@@ -49,13 +42,13 @@
 				{/each}
 			</div>
 		{/each}
+	{/if}
 
-		{#if !groups?.length}
-			<div class="text-2xl text-neutral-400" in:typewriter={{ speed: 3 }}>
-				You don't have any reminders yet.
-			</div>
-		{/if}
-	{/await}
+	{#if groups?.length === 0}
+		<div class="text-2xl text-neutral-400" in:typewriter={{ speed: 3 }}>
+			You don't have any reminders yet.
+		</div>
+	{:else}{/if}
 
 	<div class="flex-grow" />
 

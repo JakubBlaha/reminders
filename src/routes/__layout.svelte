@@ -9,6 +9,7 @@
 	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
 	import { getReminderUpdateChannel } from '$lib/utils/pwa/channel';
+	import { initRemindersListener } from '$lib/utils/reminders';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
 	import '../app.css';
@@ -17,8 +18,11 @@
 
 	$: if (browser) {
 		$authState === 'logged_out' && goto('/login');
-		$authState === 'logged_in' &&
-			getReminderUpdateChannel().postMessage({ type: 'pull-reminders' } as ReminderUpdateMessage);
+	}
+
+	$: if (browser && $authState === 'logged_in') {
+		getReminderUpdateChannel().postMessage({ type: 'pull-reminders' } as ReminderUpdateMessage);
+		initRemindersListener();
 	}
 
 	$: if (browser && $authState !== 'logged_out' && Notification.permission !== 'granted') {
