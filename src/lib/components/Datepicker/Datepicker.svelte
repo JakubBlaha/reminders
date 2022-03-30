@@ -7,7 +7,6 @@
 	import { formatDatetimeFromISO } from '$lib/utils/misc/formatDatetime';
 	import dayjs from 'dayjs';
 	import isoWeek from 'dayjs/plugin/isoWeek.js';
-	import { onMount } from 'svelte';
 	import Toggle from '$lib/components/Toggle/Toggle.svelte';
 	import Button from '$lib/components/Button/Button.svelte';
 	import { slide } from 'svelte/transition';
@@ -34,11 +33,6 @@
 
 	$: value = selectedDate;
 
-	function resetToday() {
-		selectedDate = dayjs();
-		handleDone();
-	}
-
 	function nextMonth() {
 		selectedDate = selectedDate.add(1, 'month');
 	}
@@ -47,17 +41,17 @@
 		selectedDate = selectedDate.subtract(1, 'month');
 	}
 
-	function handleDone() {
+	function updateValue(..._) {
 		selectedDate = selectedDate.hour(hours).minute(minutes);
 
 		if (isPm) {
 			selectedDate = selectedDate.add(12, 'hour');
 		}
 
-		open = false;
+		value = selectedDate;
 	}
 
-	// onMount(resetToday);
+	$: updateValue(hours, minutes, selectedDate, isPm);
 
 	let hours = 6;
 	let minutes = 30;
@@ -124,7 +118,7 @@
 
 {#if open}
 	<div
-		class="my-2 w-full bg-neutral-800 flex flex-col rounded p-4 h-[450px]"
+		class="my-2 w-full bg-neutral-800 flex flex-col rounded p-4 h-[380px]"
 		transition:slide|local
 	>
 		<div
@@ -132,7 +126,7 @@
 		>
 			<button
 				class="uppercase font-semibold flex items-center justify-center
-                    {section === 'date' ? 'bg-neutral-600 text-white' : ''}"
+                    {section === 'date' ? 'bg-neutral-700 text-white' : ''}"
 				on:click={() => (section = 'date')}
 			>
 				<Calendar />
@@ -141,7 +135,7 @@
 
 			<button
 				class="uppercase font-semibold flex items-center justify-center
-                    {section === 'time' ? 'bg-neutral-600 text-white' : ''}"
+                    {section === 'time' ? 'bg-neutral-700 text-white' : ''}"
 				on:click={() => (section = 'time')}
 			>
 				<Time />
@@ -183,11 +177,6 @@
 					</button>
 				{/each}
 			</div>
-
-			<div class="flex-grow" />
-
-			<Button cls="mt-4 w-56 mx-auto !h-12" on:click={() => (section = 'time')}>Confirm Date</Button
-			>
 		{/if}
 
 		{#if section === 'time'}
@@ -219,10 +208,6 @@
 						<input type="range" bind:value={minutes} max="59" class="mt-2" />
 					</label>
 				</div>
-
-				<div class="flex-grow" />
-
-				<Button cls="w-full !h-12" on:click={handleDone}>Confirm Time</Button>
 			</div>
 		{/if}
 	</div>

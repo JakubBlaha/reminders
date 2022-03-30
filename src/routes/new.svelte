@@ -6,6 +6,7 @@
 	import Datepicker from '$lib/components/Datepicker/Datepicker.svelte';
 	import TextInput from '$lib/components/TextInput/TextInput.svelte';
 	import { userId } from '$lib/utils/auth';
+	import { inDuration } from '$lib/utils/misc/inDuration';
 	import { createReminder } from '$lib/utils/reminders/createReminder';
 	import type { Dayjs } from 'dayjs';
 
@@ -42,6 +43,10 @@
 
 	<div class="mt-4">
 		<Datepicker bind:value={datetime} />
+	</div>
+
+	<div class="my-4 opacity-50">
+		({inDuration(datetime?.unix())})
 	</div>
 
 	<div class="flex-grow" />
