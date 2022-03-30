@@ -14,8 +14,17 @@
 
 	$: disableCreate = !title || !datetime;
 
+	let creating = false;
+
 	async function clickCreateReminder() {
-		await createReminder({ title, timestamp: datetime.unix(), creatorId: $userId });
+		creating = true;
+
+		await createReminder({
+			title,
+			timestamp: datetime.unix(),
+			creatorId: $userId,
+			reminded: false
+		});
 		goto('/');
 	}
 </script>
@@ -38,7 +47,7 @@
 	<div class="flex-grow" />
 
 	<div class="w-full">
-		<Button cls="w-full" disabled={disableCreate} on:click={clickCreateReminder}>
+		<Button cls="w-full" disabled={disableCreate} on:click={clickCreateReminder} loading={creating}>
 			Create Reminder
 		</Button>
 	</div>
