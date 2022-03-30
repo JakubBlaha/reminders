@@ -49,10 +49,15 @@
 
 	let deletingReminder = false;
 	let deleteClickConfirms = false;
+	let tempDeleteDisable = false;
 
 	async function clickDelete() {
 		if (!deleteClickConfirms) {
 			deleteClickConfirms = true;
+			tempDeleteDisable = true;
+
+			setTimeout(() => (tempDeleteDisable = false), 500);
+
 			return;
 		}
 
@@ -87,7 +92,7 @@
 			cls="w-full !bg-neutral-800 !text-red-500"
 			on:click={clickDelete}
 			loading={deletingReminder}
-			disabled={updatingReminder}
+			disabled={updatingReminder || tempDeleteDisable}
 		>
 			{deleteClickConfirms ? 'Confirm Deletion' : 'Delete'}
 		</Button>
