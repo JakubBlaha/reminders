@@ -7,5 +7,6 @@ export function inDuration(ts: number) {
 	const now = dayjs();
 	const dur = datetime.diff(now);
 
+	// @ts-expect-error
 	return dayjs.duration(dur).humanize(true);
 }
