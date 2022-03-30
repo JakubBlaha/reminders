@@ -20,12 +20,6 @@
 			// Save reminders for the whole client
 			$clientReminders = reminders;
 
-			// Update reminders in webworker
-			getReminderUpdateChannel().postMessage({
-				type: 'push-reminders',
-				reminders
-			} as ReminderUpdateMessage);
-
 			const groups = dateGroupReminders(reminders);
 
 			sayRemindersFor.set(groups[0]?.title || '');

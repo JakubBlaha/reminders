@@ -4,9 +4,11 @@
 	import { page } from '$app/stores';
 	import LoaderScreen from '$lib/components/LoaderScreen/LoaderScreen.svelte';
 	import ChevronLeft from '$lib/icons/ChevronLeft.svelte';
+	import type { ReminderUpdateMessage } from '$lib/interfaces/ReminderUpdateMessage';
 	import { authState } from '$lib/utils/auth';
 	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
+	import { getReminderUpdateChannel } from '$lib/utils/pwa/channel';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
 	import '../app.css';
@@ -15,6 +17,8 @@
 
 	$: if (browser) {
 		$authState === 'logged_out' && goto('/login');
+		$authState === 'logged_in' &&
+			getReminderUpdateChannel().postMessage({ type: 'pull-reminders' } as ReminderUpdateMessage);
 	}
 
 	$: if (browser && $authState !== 'logged_out' && Notification.permission !== 'granted') {

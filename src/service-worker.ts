@@ -13,7 +13,7 @@ import {
 import dayjs from 'dayjs';
 import { postNotification } from '$lib/utils/pwa/notification';
 import { updateReminder } from '$lib/utils/reminders/updateReminder';
-import { initWorkerFirebaseListeners } from '$lib/utils/pwa/workerFirebaseListeners';
+import { initWorkerFirebase, refreshReminders } from '$lib/utils/pwa/workerFirebaseListeners';
 
 const ctx: ServiceWorkerGlobalScope = self as any;
 
@@ -48,7 +48,7 @@ worker.addEventListener('activate', (event) => {
 		})
 	);
 
-	initWorkerFirebaseListeners();
+	initWorkerFirebase();
 });
 
 /**
@@ -108,7 +108,14 @@ notificationChannel.onmessage = (event: { data: NotificationMessage }) => {
 // Broadcast reminder update channel
 const reminderUpdateChannel = getReminderUpdateChannel();
 
-reminderUpdateChannel.onmessage = (event: { data: ReminderUpdateMessage }) => {};
+reminderUpdateChannel.onmessage = (event: { data: ReminderUpdateMessage }) => {
+	const { type } = event.data;
+
+	if (type === 'pull-reminders') {
+		console.info('Pulling reminders from service worker.');
+		refreshReminders();
+	}
+};
 
 function showReminders() {
 	const reminders = getReminders();

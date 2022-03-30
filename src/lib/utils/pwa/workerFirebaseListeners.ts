@@ -1,11 +1,12 @@
 import type { ReminderData } from '$lib/interfaces/ReminderData';
+import { onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { auth, db } from '../misc/firebase';
 import { setReminders } from './remindersStore';
 
 let reminderUpdateListener: () => void;
 
-export function initWorkerFirebaseListeners() {
+function init() {
 	const uid = auth.currentUser?.uid;
 
 	if (!uid) {
@@ -30,4 +31,23 @@ export function initWorkerFirebaseListeners() {
 
 		console.info('Reminders updated by a snapshot listener.');
 	});
+}
+
+export function kill() {
+	reminderUpdateListener?.();
+}
+
+export function initWorkerFirebase() {
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+			init();
+		} else {
+			console.info('[SW]: User logged out. Removing all reminders.');
+			kill();
+		}
+	});
+}
+
+export function refreshReminders() {
+	init();
 }

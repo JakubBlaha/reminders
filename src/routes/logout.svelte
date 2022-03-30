@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Button from '$lib/components/Button/Button.svelte';
 	import { userId } from '$lib/utils/auth';
 	import { auth } from '$lib/utils/misc/firebase';
