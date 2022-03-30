@@ -20,8 +20,8 @@
 	}
 </script>
 
-<main class="p-4 flex flex-col h-full">
-	<CategoryTitle title="me about:" />
+<main class="flex flex-col h-full p-4">
+	<CategoryTitle title="me to:" />
 
 	<div class="mt-4">
 		<TextInput bind:value={title} />

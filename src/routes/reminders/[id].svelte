@@ -66,11 +66,11 @@
 	}
 </script>
 
-<main class="p-4 flex flex-col h-full overflow-scroll">
-	<CategoryTitle title="me about:" />
+<main class="flex flex-col h-full p-4 overflow-scroll">
+	<CategoryTitle title="me to:" />
 
 	<input
-		class="bg-neutral-800 rounded p-4 mt-2 mb-4 outline-none w-full"
+		class="w-full p-4 mt-2 mb-4 rounded outline-none bg-neutral-800"
 		bind:value={reminderData.title}
 	/>
 
