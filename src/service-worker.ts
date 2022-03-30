@@ -127,10 +127,9 @@ function showReminders() {
 			postNotification(reminder.title, '');
 			setReminded(reminder.id);
 			updateReminder(reminder.id, { reminded: true });
+			console.info('Updated reminder from service worker.');
 		}
 	});
-
-	console.log(reminders);
 }
 
 setInterval(showReminders, 10000);
