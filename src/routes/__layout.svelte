@@ -83,7 +83,9 @@
 			</span>
 
 			{#if $sayRemindersFor && $page.url.pathname === '/'}
-				<span transition:typewriter={{ message: `for ${$sayRemindersFor}:` }} />
+				{#key $sayRemindersFor}
+					<span transition:typewriter={{ message: `for ${$sayRemindersFor}:` }} />
+				{/key}
 			{/if}
 		</div>
 
