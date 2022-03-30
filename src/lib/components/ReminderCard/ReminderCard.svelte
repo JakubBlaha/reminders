@@ -18,12 +18,12 @@
 </script>
 
 <button
-	class="flex items-center w-full h-16 p-4 mt-2 transition-all rounded cursor-pointer bg-neutral-800 hover:pl-6 active:pl-2"
+	class="flex items-center w-full h-16 p-4 mt-2 transition-all rounded cursor-pointer bg-neutral-800 hover:pl-6 active:pl-2 overflow-hidden"
 	on:click={clickCard}
 >
 	<div class={reminderData.reminded && 'line-through opacity-30'}>{reminderData.title}</div>
 	<div class="flex-grow" />
-	<div class="text-neutral-500">
+	<div class="text-neutral-500 whitespace-nowrap ml-2">
 		{inDurationString}, {timeFromTimestamp(reminderData.timestamp)}
 	</div>
 </button>

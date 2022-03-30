@@ -8,14 +8,15 @@
 	import dayjs from 'dayjs';
 	import isoWeek from 'dayjs/plugin/isoWeek.js';
 	import Toggle from '$lib/components/Toggle/Toggle.svelte';
-	import Button from '$lib/components/Button/Button.svelte';
 	import { slide } from 'svelte/transition';
+
+	const now = dayjs().add(10, 'minutes');
 
 	dayjs.extend(isoWeek);
 
 	export let id = '';
 	export let placeholder = 'Select date & time';
-	export let value = dayjs();
+	export let value = now;
 
 	export function setTimestamp(ts: number) {
 		selectedDate = dayjs.unix(ts);
@@ -53,8 +54,8 @@
 
 	$: updateValue(hours, minutes, selectedDate, isPm);
 
-	let hours = 6;
-	let minutes = 30;
+	let hours = now.hour();
+	let minutes = now.minute();
 	let monthDays = [];
 	$: inputText = formatDatetimeFromISO(selectedDate);
 	let isPm = false;

@@ -52,7 +52,7 @@
 
 	<div class="flex-grow" />
 
-	<div class="flex space-x-2">
+	<div class="flex space-x-2 mt-4">
 		<button
 			on:click={clickLogout}
 			class="grid w-16 h-16 rotate-180 rounded place-items-center bg-neutral-800 active:scale-95"
