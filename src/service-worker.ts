@@ -1,15 +1,11 @@
 /// <reference lib="webworker" />
 
+import '../static/polyfill/broadcastchannel';
 import { build, files, version } from '$service-worker';
 import type { NotificationMessage } from '$lib/interfaces/NotificationMessage';
 import { getNotificationChannel, getReminderUpdateChannel } from '$lib/utils/pwa/channel';
 import type { ReminderUpdateMessage } from '$lib/interfaces/ReminderUpdateMessage';
-import {
-	setReminders,
-	getReminders,
-	setReminded,
-	getReminded
-} from '$lib/utils/pwa/remindersStore';
+import { getReminders, setReminded } from '$lib/utils/pwa/remindersStore';
 import dayjs from 'dayjs';
 import { postNotification } from '$lib/utils/pwa/notification';
 import { updateReminder } from '$lib/utils/reminders/updateReminder';
