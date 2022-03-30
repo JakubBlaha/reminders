@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-
 	import { page } from '$app/stores';
 	import Button from '$lib/components/Button/Button.svelte';
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import Datepicker from '$lib/components/Datepicker/Datepicker.svelte';
 	import type { ReminderData } from '$lib/interfaces/ReminderData';
 	import { userId } from '$lib/utils/auth';
+	import { inDuration } from '$lib/utils/misc/inDuration';
 	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { deleteReminder } from '$lib/utils/reminders/deleteReminder';
 	import { getReminder } from '$lib/utils/reminders/getReminder';
 	import { updateReminder } from '$lib/utils/reminders/updateReminder';
+	import type { Dayjs } from 'dayjs';
 
 	const reminderId = $page.params.id;
 
@@ -70,6 +71,8 @@
 
 		goto('/');
 	}
+
+	let datetime: Dayjs;
 </script>
 
 <main class="flex flex-col h-full p-4 overflow-scroll">
@@ -83,7 +86,11 @@
 	<CategoryTitle title="at:" />
 
 	<div class="mt-2">
-		<Datepicker bind:this={datepicker} />
+		<Datepicker bind:this={datepicker} bind:value={datetime} />
+	</div>
+
+	<div class="my-4 opacity-50">
+		({inDuration(datetime?.unix())})
 	</div>
 
 	<div class="flex-grow" />
