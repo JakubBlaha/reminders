@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { ReminderData } from '$lib/interfaces/ReminderData';
+	import { inDuration } from '$lib/utils/misc/inDuration';
 	import { timeFromTimestamp } from '$lib/utils/misc/timeFromTimestamp';
 
 	export let reminderData: ReminderData;
@@ -8,6 +9,12 @@
 	function clickCard() {
 		goto(`/reminders/${reminderData.id}`);
 	}
+
+	let inDurationString = inDuration(reminderData.timestamp);
+
+	setInterval(() => {
+		inDurationString = inDuration(reminderData.timestamp);
+	}, 5000);
 </script>
 
 <button
@@ -16,5 +23,7 @@
 >
 	<div class={reminderData.reminded && 'line-through opacity-30'}>{reminderData.title}</div>
 	<div class="flex-grow" />
-	<div class="text-neutral-500">{timeFromTimestamp(reminderData.timestamp)}</div>
+	<div class="text-neutral-500">
+		{inDurationString}, {timeFromTimestamp(reminderData.timestamp)}
+	</div>
 </button>
