@@ -216,7 +216,7 @@
 
 					<label class="font-semibold">
 						<div>Minutes:</div>
-						<input type="range" bind:value={minutes} max="60" class="mt-2" />
+						<input type="range" bind:value={minutes} max="59" class="mt-2" />
 					</label>
 				</div>
 
