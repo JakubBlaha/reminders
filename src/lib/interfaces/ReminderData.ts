@@ -3,4 +3,5 @@ export interface ReminderData {
 	title: string;
 	timestamp: number;
 	creatorId: string;
+	reminded: boolean;
 }

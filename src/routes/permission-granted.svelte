@@ -1,6 +1,12 @@
-<script>
+<script lang="ts">
+	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button/Button.svelte';
+	import { postNotification } from '$lib/utils/pwa/notification';
+
+	$: if (browser) {
+		postNotification('Hey!', 'This is how the notifications will look like!');
+	}
 </script>
 
 <div class="text-2xl" />

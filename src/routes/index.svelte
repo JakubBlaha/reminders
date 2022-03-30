@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/Button/Button.svelte';
 	import CategoryTitle from '$lib/components/CategoryTitle/CategoryTitle.svelte';
 	import ReminderCard from '$lib/components/ReminderCard/ReminderCard.svelte';
 	import Logout from '$lib/icons/logout.svelte';
+	import type { ReminderUpdateMessage } from '$lib/interfaces/ReminderUpdateMessage';
 	import { userId } from '$lib/utils/auth';
 	import { dateGroupReminders } from '$lib/utils/misc/dateGroupReminders';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
+	import { getReminderUpdateChannel } from '$lib/utils/pwa/channel';
+	import { clientReminders } from '$lib/utils/reminders';
 	import { getReminders } from '$lib/utils/reminders/getReminders';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
 	import { fade } from 'svelte/transition';
@@ -14,6 +17,15 @@
 	$: getReminderGroupsPromise =
 		$userId &&
 		getReminders().then((reminders) => {
+			// Save reminders for the whole client
+			$clientReminders = reminders;
+
+			// Update reminders in webworker
+			getReminderUpdateChannel().postMessage({
+				type: 'push-reminders',
+				reminders
+			} as ReminderUpdateMessage);
+
 			const groups = dateGroupReminders(reminders);
 
 			sayRemindersFor.set(groups[0]?.title || '');
@@ -30,7 +42,7 @@
 	}
 </script>
 
-<main class="p-4 h-full flex flex-col">
+<main class="flex flex-col h-full p-4">
 	{#await getReminderGroupsPromise then groups}
 		{#each groups || [] as group, index}
 			<div in:fade class="mt-8 first:-mt-2">
@@ -56,7 +68,7 @@
 	<div class="flex space-x-2">
 		<button
 			on:click={clickLogout}
-			class="w-16 h-16 grid place-items-center bg-neutral-800 rounded rotate-180 active:scale-95"
+			class="grid w-16 h-16 rotate-180 rounded place-items-center bg-neutral-800 active:scale-95"
 		>
 			<div class="translate-x-1">
 				<Logout />
@@ -68,7 +80,7 @@
 		</Button>
 
 		<a
-			class="w-16 bg-red-500 animate-pulse rounded px-2"
+			class="w-16 px-2 bg-red-500 rounded animate-pulse"
 			href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 			target="_blank">z</a
 		>
