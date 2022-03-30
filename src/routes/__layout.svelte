@@ -55,9 +55,13 @@
 <svelte:window bind:innerHeight />
 
 <div style="height: {innerHeight}px" class="grid max-w-full place-items-center">
-	<div class="absolute text-white left-2 top-2">
+	<a
+		class="absolute text-white left-2 top-2"
+		href="https://docs.google.com/presentation/d/1S2UEV_FoNWlgme2VCRG4Xpm3AQ1VIr2nkIi06B2krVs/edit?usp=sharing/"
+		target="_blank"
+	>
 		Remindr<span class="px-1 text-white bg-red-500">z</span>
-	</div>
+	</a>
 
 	<div
 		class="bg-neutral-900 text-white max-w-[500px] max-h-[800px] mx-auto w-full h-full overflow-hidden z-10"
