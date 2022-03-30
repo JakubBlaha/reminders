@@ -40,6 +40,7 @@
 		deleteClickConfirms = false;
 
 		reminderData.timestamp = datepicker.getTimestamp();
+		reminderData.reminded = false;
 
 		await updateReminder(reminderId, reminderData);
 
