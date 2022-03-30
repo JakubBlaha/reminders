@@ -40,10 +40,6 @@
 	let sayRemind = false;
 
 	afterNavigate(({ to }) => {
-		if (to.pathname !== '/') {
-			sayRemindersFor.set(null);
-		}
-
 		if (to.pathname === '/new' || to.pathname.includes('reminders')) {
 			sayRemind = true;
 		} else {
@@ -86,7 +82,7 @@
 				r<span class="px-2 text-white bg-red-500">z</span>
 			</span>
 
-			{#if $sayRemindersFor}
+			{#if $sayRemindersFor && $page.url.pathname === '/'}
 				<span transition:typewriter={{ message: `for ${$sayRemindersFor}:` }} />
 			{/if}
 		</div>
