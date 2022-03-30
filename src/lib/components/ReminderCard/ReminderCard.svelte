@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { ReminderData } from '$lib/interfaces/ReminderData';
+	import { timeFromTimestamp } from '$lib/utils/misc/timeFromTimestamp';
 
 	export let reminderData: ReminderData;
 
@@ -10,8 +11,10 @@
 </script>
 
 <button
-	class="bg-neutral-800 p-4 rounded mt-2 hover:px-6 transition-all cursor-pointer h-16 flex items-center active:px-2 w-full"
+	class="flex items-center w-full h-16 p-4 mt-2 transition-all rounded cursor-pointer bg-neutral-800 hover:pl-6 active:pl-2"
 	on:click={clickCard}
 >
 	<div>{reminderData.title}</div>
+	<div class="flex-grow" />
+	<div class="text-neutral-500">{timeFromTimestamp(reminderData.timestamp)}</div>
 </button>
