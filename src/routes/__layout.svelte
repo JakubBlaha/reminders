@@ -8,13 +8,17 @@
 	import { loadingRoute } from '$lib/utils/misc/loader';
 	import { sayRemindersFor } from '$lib/utils/misc/sayRemindersFor';
 	import { typewriter } from '$lib/utils/transitions/typewriter';
-	import { fade, slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 	import '../app.css';
 
 	let innerHeight: number;
 
 	$: if (browser) {
 		$authState === 'logged_out' && goto('/login');
+	}
+
+	$: if (browser && $authState !== 'logged_out' && Notification.permission !== 'granted') {
+		goto('/enable-notifications');
 	}
 
 	let sayRemind = false;
@@ -38,22 +42,22 @@
 
 <svelte:window bind:innerHeight />
 
-<div style="height: {innerHeight}px" class="grid place-items-center max-w-full">
-	<div class="absolute left-2 top-2 text-white">
-		Remindr<span class="text-white bg-red-500 px-1">z</span>
+<div style="height: {innerHeight}px" class="grid max-w-full place-items-center">
+	<div class="absolute text-white left-2 top-2">
+		Remindr<span class="px-1 text-white bg-red-500">z</span>
 	</div>
 
 	<div
 		class="bg-neutral-900 text-white max-w-[500px] max-h-[800px] mx-auto w-full h-full overflow-hidden z-10"
 	>
 		{#if $authState === null || !browser || $loadingRoute}
-			<div class="h-full absolute top-0 bottom-0 left-0 right-0 bg-neutral-800 z-10" out:fade>
+			<div class="absolute top-0 bottom-0 left-0 right-0 z-10 h-full bg-neutral-800" out:fade>
 				<LoaderScreen />
 			</div>
 		{/if}
 
 		<!-- Titlebar -->
-		<div class="text-4xl pt-4 pl-5 whitespace-nowrap float-right min-w-full">
+		<div class="float-right min-w-full pt-4 pl-5 text-4xl whitespace-nowrap">
 			{#if $page.url.pathname !== '/' && $page.url.pathname !== '/login'}
 				<div on:click={clickBack} class="inline">
 					<button class="transition active:-translate-x-12">
@@ -63,7 +67,7 @@
 			{/if}
 
 			Remind<span class:opacity-0={sayRemind}>
-				r<span class="text-white bg-red-500 px-2">z</span>
+				r<span class="px-2 text-white bg-red-500">z</span>
 			</span>
 
 			{#if $sayRemindersFor}
