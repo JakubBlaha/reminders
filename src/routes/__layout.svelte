@@ -16,8 +16,8 @@
 
 	// Register dayjs plugins
 	import dayjs from 'dayjs';
-	import duration from 'dayjs/plugin/duration';
-	import relativeTime from 'dayjs/plugin/relativeTime';
+	import duration from 'dayjs/plugin/duration.js';
+	import relativeTime from 'dayjs/plugin/relativeTime.js';
 
 	dayjs.extend(duration);
 	dayjs.extend(relativeTime);
